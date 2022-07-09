@@ -3,7 +3,6 @@ const { v4 } = require("uuid");
 const Kafka = require("node-rdkafka");
 const eventMessageSchemaSerialize = require("../messageSchema");
 const axios = require("axios");
-const flatted = require("flatted");
 
 const app = express();
 app.use(express.json());
