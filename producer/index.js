@@ -21,20 +21,22 @@ const kafkaWriteStream = Kafka.createWriteStream(
 );
 
 //POST request
-app.post("/subscribe", async (req, res) => {
-  let response;
+app.post("/subscribe-newsletter", async (req, res) => {
   try {
+    let response;
     let name = req.body.name;
     let age = req.body.age;
     let gender = req.body.gender;
     let hobbies = req.body.hobbies;
     let messageId = v4();
-    await queueMessage(name, age, gender, hobbies, messageId);
-    response = await axios.get(`http://localhost:4000/${messageId}`);
+    let message = await queueMessage(name, age, gender, hobbies, messageId);
+    if (message.success)
+      response = await axios.get(`http://localhost:4000/${messageId}`);
+
     res.send(response.data);
   } catch (error) {
     console.log(error);
-    res.send({ success: false, message: error.message });
+    res.status(501).send({ success: false, message: error.message });
   }
 });
 
@@ -60,12 +62,11 @@ async function queueMessage(
         eventMessageSchemaSerialize.toBuffer(message)
       );
       if (result) {
-        message.success = true;
-        //console.log(`event created----> ${JSON.stringify(message, null, 2)}`);
-        resolve(message);
+        console.log(`event created ----> ${JSON.stringify(message, null, 2)}`);
+        resolve({ success: true, data: message });
       }
       if (!result)
-        resolve({ success: false, message: "Unable to create event !" });
+        reject({ success: false, message: "Unable to create event !" });
     } catch (error) {
       console.log(error);
       reject({ success: false, message: error.message });

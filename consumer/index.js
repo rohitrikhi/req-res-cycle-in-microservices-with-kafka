@@ -28,8 +28,11 @@ consumer.connect();
 
 app.get("/:eventId", async (req, res) => {
   responseEventEmitter.on(req.params.eventId, (data) => {
-    //console.log(`inside GET------> ${JSON.stringify(data, null, 2)}`);
     delete data.messageId;
+    data.success = true;
+    console.log(
+      `sending the response ------> ${JSON.stringify(data, null, 2)}`
+    );
     res.json(data);
   });
 });
@@ -44,7 +47,7 @@ consumer
 
 function handleReceivedEvents(data) {
   data = eventMessageSchemaDeserialize.fromBuffer(data.value);
-  //console.log(`received the message ------> ${JSON.stringify(data, null, 2)}`);
+  console.log(`received the message ------> ${JSON.stringify(data, null, 2)}`);
   responseEventEmitter.emit(data.messageId, data);
 }
 app.listen(4000, (err) => {

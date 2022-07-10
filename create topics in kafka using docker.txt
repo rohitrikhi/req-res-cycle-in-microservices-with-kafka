@@ -1,4 +1,12 @@
-docker exec -it kafka /opt/bitnami/kafka/bin/ kafka-topics.sh \ --create \ --zookeeper zookeeper:2181 \ --replication-factor 1 \ --partition 1 \ --topic test
+this command creates a topic name test in the kafka ------>
+docker exec -it 9904ff64c84c /opt/bitnami/kafka/bin/kafka-topics.sh --create  
+--bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test
 
-it comes form this SYNTAX 
-docker exec -it [container_id] /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+it comes form this SYNTAX ---->
+docker exec -it [container_id] /opt/kafka_2.11-0.10.1.0/bin/kafka-topics.sh --create  --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic [topic_name]
+
+replace [container_id] with the kafka CONTAINER ID that you can get by running docker ps
+
+replace [topic_name] with the name of the topic you wanna create
+
+you may need to change the path too according to the COMMAND NAMES you get after running docker ps
